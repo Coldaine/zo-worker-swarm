@@ -1,3 +1,10 @@
+# Zo Worker Swarm Dependencies
+#
+# Required environment variables:
+#   - ZAI_API_KEY: Z.ai API key
+#   - XAI_API_KEY: X.AI (Grok) API key
+#   - OPENROUTER_API_KEY: OpenRouter API key
+
 pyyaml>=6.0.1
 rich>=13.7.0
 asyncio>=3.4.3

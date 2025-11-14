@@ -5,7 +5,7 @@
 #
 # Available CCR Instances:
 #   - general: Z.ai GLM-4.6 (general purpose coding)
-#   - fast: Groq Llama-3.3-70b (ultra-fast responses)
+#   - fast: X.AI Grok (fast responses)
 #   - reasoning: DeepSeek Reasoner (deep thinking/reasoning)
 #   - code-review: DeepSeek Chat (code analysis)
 #   - smart: Claude Sonnet 4 (highest quality)

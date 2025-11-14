@@ -21,7 +21,7 @@ Windows Machine                          Zo Machine (via SSH)
 │ Port 3456 (GLM-4.6)     │◄───────────►│                      │
 ├─────────────────────────┤             │                      │
 │ CCR Instance #2         │             │    Task Execution    │
-│ Port 3457 (Llama 3.3)   │◄───────────►│                      │
+│ Port 3457 (Grok)        │◄───────────►│                      │
 ├─────────────────────────┤             │                      │
 │ CCR Instance #3         │             │                      │
 │ Port 3458 (DeepSeek-R1) │◄───────────►│                      │
@@ -112,16 +112,21 @@ Windows Machine                          Zo Machine (via SSH)
 ### Quick Start
 
 ```bash
-# 1. Start CCR instances
+# 1. Set API keys (required)
+export ZAI_API_KEY="your-zai-key"
+export XAI_API_KEY="your-xai-key"
+export OPENROUTER_API_KEY="your-openrouter-key"
+
+# 2. Start CCR instances
 python scripts/run.py start-ccr
 
-# 2. Check status
+# 3. Check status
 python scripts/run.py status
 
-# 3. Run example tasks
+# 4. Run example tasks
 python scripts/run.py execute tasks/example_zo_tasks.yaml
 
-# 4. Stop CCR instances (optional)
+# 5. Stop CCR instances (optional)
 python scripts/run.py stop-ccr
 ```
 
@@ -161,7 +166,7 @@ tasks:
 | Instance | Port | Model | Best For | Cost |
 |----------|------|-------|----------|------|
 | `general` | 3456 | Z.ai GLM-4.6 | General purpose coding | Paid |
-| `fast` | 3457 | Groq Llama-3.3-70b | Quick responses, simple tasks | Free |
+| `fast` | 3457 | X.AI Grok | Quick responses, simple tasks | Paid |
 | `reasoning` | 3458 | DeepSeek Reasoner | Complex reasoning, step-by-step analysis | Paid |
 | `code-review` | 3459 | DeepSeek Chat | Code analysis, reviews | Paid |
 | `smart` | 3460 | Claude Sonnet 4 | Highest quality, complex tasks | Paid |

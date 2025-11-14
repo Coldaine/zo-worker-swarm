@@ -10,23 +10,20 @@
   "transformers": [],
   "Providers": [
     {
-      "name": "groq",
-      "api_base_url": "https://api.groq.com/openai/v1/chat/completions",
-      "api_key": "${GROQ_API_KEY}",
-      "models": ["llama-3.3-70b-versatile"],
-      "transformer": {
-        "use": ["groq"]
-      }
+      "name": "xai",
+      "api_base_url": "https://api.x.ai/v1/chat/completions",
+      "api_key": "${XAI_API_KEY}",
+      "models": ["grok-beta"]
     }
   ],
   "StatusLine": {
     "enabled": false
   },
   "Router": {
-    "default": "groq,llama-3.3-70b-versatile",
-    "background": "groq,llama-3.3-70b-versatile",
-    "think": "groq,llama-3.3-70b-versatile",
-    "longContext": "groq,llama-3.3-70b-versatile",
-    "webSearch": "groq,llama-3.3-70b-versatile"
+    "default": "xai,grok-beta",
+    "background": "xai,grok-beta",
+    "think": "xai,grok-beta",
+    "longContext": "xai,grok-beta",
+    "webSearch": "xai,grok-beta"
   }
 }

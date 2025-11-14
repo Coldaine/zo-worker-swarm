@@ -39,8 +39,8 @@ class CCRManager:
         "fast": {
             "config": "ccr-fast.json",
             "port": 3457,
-            "model": "groq/llama-3.3-70b",
-            "description": "Ultra-fast responses (Groq Llama 3.3)"
+            "model": "xai/grok-beta",
+            "description": "Ultra-fast responses (X.AI Grok)"
         },
         "reasoning": {
             "config": "ccr-reasoning.json",

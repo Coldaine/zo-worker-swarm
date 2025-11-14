@@ -20,7 +20,7 @@ tasks:
 ## Available CCR Instances
 
 - **general**: Z.ai GLM-4.6 - General purpose coding tasks
-- **fast**: Groq Llama-3.3-70b - Quick responses, simple tasks
+- **fast**: X.AI Grok - Fast responses, simple tasks
 - **reasoning**: DeepSeek Reasoner - Complex reasoning, deep analysis
 - **code-review**: DeepSeek Chat - Code review and analysis
 - **smart**: Claude Sonnet 4 - Highest quality, most complex tasks
