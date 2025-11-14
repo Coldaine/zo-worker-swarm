@@ -1,0 +1,32 @@
+{
+  "LOG": true,
+  "LOG_LEVEL": "info",
+  "CLAUDE_PATH": "C:\\Users\\pmacl\\AppData\\Roaming\\npm\\claude.cmd",
+  "HOST": "127.0.0.1",
+  "PORT": 3457,
+  "APIKEY": "",
+  "API_TIMEOUT_MS": "600000",
+  "PROXY_URL": "",
+  "transformers": [],
+  "Providers": [
+    {
+      "name": "groq",
+      "api_base_url": "https://api.groq.com/openai/v1/chat/completions",
+      "api_key": "${GROQ_API_KEY}",
+      "models": ["llama-3.3-70b-versatile"],
+      "transformer": {
+        "use": ["groq"]
+      }
+    }
+  ],
+  "StatusLine": {
+    "enabled": false
+  },
+  "Router": {
+    "default": "groq,llama-3.3-70b-versatile",
+    "background": "groq,llama-3.3-70b-versatile",
+    "think": "groq,llama-3.3-70b-versatile",
+    "longContext": "groq,llama-3.3-70b-versatile",
+    "webSearch": "groq,llama-3.3-70b-versatile"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "LOG": true,
+  "LOG_LEVEL": "info",
+  "CLAUDE_PATH": "C:\\Users\\pmacl\\AppData\\Roaming\\npm\\claude.cmd",
+  "HOST": "127.0.0.1",
+  "PORT": 3459,
+  "APIKEY": "",
+  "API_TIMEOUT_MS": "600000",
+  "PROXY_URL": "",
+  "transformers": [],
+  "Providers": [
+    {
+      "name": "openrouter",
+      "api_base_url": "https://openrouter.ai/api/v1/chat/completions",
+      "api_key": "${OPENROUTER_API_KEY}",
+      "models": ["deepseek/deepseek-chat"],
+      "transformer": {
+        "use": ["openrouter"]
+      }
+    }
+  ],
+  "StatusLine": {
+    "enabled": false
+  },
+  "Router": {
+    "default": "openrouter,deepseek/deepseek-chat",
+    "background": "openrouter,deepseek/deepseek-chat",
+    "think": "openrouter,deepseek/deepseek-chat",
+    "longContext": "openrouter,deepseek/deepseek-chat",
+    "webSearch": "openrouter,deepseek/deepseek-chat"
+  }
+}

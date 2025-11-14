@@ -1,0 +1,4 @@
+pyyaml>=6.0.1
+rich>=13.7.0
+asyncio>=3.4.3
+asyncssh>=2.14.0

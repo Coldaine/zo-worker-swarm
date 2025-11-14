@@ -1,0 +1,29 @@
+{
+  "LOG": true,
+  "LOG_LEVEL": "info",
+  "CLAUDE_PATH": "C:\\Users\\pmacl\\AppData\\Roaming\\npm\\claude.cmd",
+  "HOST": "127.0.0.1",
+  "PORT": 3456,
+  "APIKEY": "",
+  "API_TIMEOUT_MS": "600000",
+  "PROXY_URL": "",
+  "transformers": [],
+  "Providers": [
+    {
+      "name": "zai",
+      "api_base_url": "https://api.z.ai/api/coding/paas/v4/chat/completions",
+      "api_key": "${ZAI_API_KEY}",
+      "models": ["glm-4.6"]
+    }
+  ],
+  "StatusLine": {
+    "enabled": false
+  },
+  "Router": {
+    "default": "zai,glm-4.6",
+    "background": "zai,glm-4.6",
+    "think": "zai,glm-4.6",
+    "longContext": "zai,glm-4.6",
+    "webSearch": "zai,glm-4.6"
+  }
+}

@@ -1,0 +1,160 @@
+# Zo Worker Swarm - Example Task Definitions
+#
+# This file demonstrates various types of tasks that can be executed on Zo
+# using different CCR instances (AI models) optimized for different purposes.
+#
+# Available CCR Instances:
+#   - general: Z.ai GLM-4.6 (general purpose coding)
+#   - fast: Groq Llama-3.3-70b (ultra-fast responses)
+#   - reasoning: DeepSeek Reasoner (deep thinking/reasoning)
+#   - code-review: DeepSeek Chat (code analysis)
+#   - smart: Claude Sonnet 4 (highest quality)
+
+tasks:
+  # Task 1: Quick directory listing and summary
+  - name: "List Projects Directory"
+    ccr_instance: "fast"
+    command: |
+      cd /Projects &&
+      find . -maxdepth 2 -type d | head -20
+    prompt: "Analyze these project directories and provide a brief summary of what types of projects are present"
+    timeout: 60
+    tags: ["exploration", "quick-scan"]
+    description: "Quick scan of Projects directory structure"
+
+  # Task 2: Analyze Python files in a project
+  - name: "Analyze Python Architecture"
+    ccr_instance: "general"
+    command: |
+      cd /Projects &&
+      find . -name "*.py" -type f | head -30 |
+      xargs -I {} sh -c 'echo "=== {} ===" && head -100 {}'
+    prompt: "Analyze these Python files and provide: 1) Overall architecture pattern, 2) Main technologies/frameworks used, 3) Code quality observations, 4) Potential improvements"
+    timeout: 300
+    tags: ["code-analysis", "architecture"]
+    description: "Deep analysis of Python codebase architecture"
+
+  # Task 3: Review llama.cpp directory
+  - name: "Review llama.cpp Setup"
+    ccr_instance: "code-review"
+    command: |
+      cd /llama.cpp &&
+      ls -lah &&
+      echo "=== README ===" &&
+      head -100 README.md
+    prompt: "Based on this llama.cpp installation: 1) What version/variant is this? 2) What files indicate custom modifications? 3) What should I check to ensure it's properly configured?"
+    timeout: 120
+    tags: ["llm", "setup-review"]
+    description: "Review llama.cpp installation and configuration"
+
+  # Task 4: Check benchmark results
+  - name: "Summarize Benchmarks"
+    ccr_instance: "fast"
+    command: |
+      cd /benchmark_results &&
+      ls -lt | head -10 &&
+      if [ -f latest.json ]; then cat latest.json; fi
+    prompt: "Summarize the benchmark results: 1) What was benchmarked? 2) Key performance metrics, 3) Any notable results or issues"
+    timeout: 90
+    tags: ["performance", "benchmarks"]
+    description: "Quick benchmark results summary"
+
+  # Task 5: System resource check
+  - name: "System Resources Check"
+    ccr_instance: "fast"
+    command: |
+      echo "=== CPU INFO ===" &&
+      cat /proc/cpuinfo | grep -E 'model name|cpu cores' | head -5 &&
+      echo "=== MEMORY ===" &&
+      free -h &&
+      echo "=== DISK ===" &&
+      df -h /
+    prompt: "Analyze these system resources and provide: 1) CPU capabilities, 2) Available memory, 3) Disk usage status, 4) Any resource constraints to be aware of"
+    timeout: 60
+    tags: ["system", "resources"]
+    description: "Check system resources and capacity"
+
+  # Task 6: Deep reasoning task - Optimization recommendations
+  - name: "Optimization Strategy"
+    ccr_instance: "reasoning"
+    command: |
+      cd / &&
+      du -sh Projects llama.cpp models benchmark_results 2>/dev/null &&
+      ls -d */ | head -20
+    prompt: "Based on this Zo environment, provide a detailed optimization strategy: 1) How to better organize the directory structure, 2) What can be moved/archived, 3) Performance optimization opportunities, 4) Resource allocation recommendations. Think step-by-step through each consideration."
+    timeout: 300
+    tags: ["strategy", "optimization", "deep-thinking"]
+    description: "Strategic analysis for Zo environment optimization"
+
+  # Task 7: Code quality analysis with smart model
+  - name: "Code Quality Deep Dive"
+    ccr_instance: "smart"
+    command: |
+      cd /Projects &&
+      find . -name "*.py" -o -name "*.js" -o -name "*.ts" | head -20 |
+      xargs -I {} sh -c 'echo "=== {} ===" && head -50 {} && echo""'
+    prompt: "Perform a comprehensive code quality analysis: 1) Code style and consistency, 2) Potential bugs or anti-patterns, 3) Security considerations, 4) Refactoring opportunities, 5) Documentation quality. Provide specific, actionable recommendations."
+    timeout: 400
+    tags: ["code-quality", "comprehensive"]
+    description: "Comprehensive code quality analysis using highest-quality model"
+    dependencies: ["Analyze Python Architecture"]  # Run after architecture analysis
+
+  # Task 8: Decision extraction workflow (from user's requested prompt)
+  - name: "Extract Architectural Decisions"
+    ccr_instance: "reasoning"
+    command: |
+      cd /Projects &&
+      find . -name "README.md" -o -name "ARCHITECTURE.md" -o -name "DESIGN.md" |
+      head -5 |
+      xargs -I {} sh -c 'echo "=== FILE: {} ===" && cat {}'
+    prompt: |
+      You are a world-class Systems Architect and Knowledge Management Analyst. Your specialty is reverse-engineering complex design documents into a structured decision registry.
+
+      TASK: Systematic Decision Extraction and RAG Validation with Meta-Analysis
+
+      PHASE 1: GUIDED BOTTOM-UP EXTRACTION
+      1. Start at the VERY END of the document (last line)
+      2. Read upwards, line-by-line (or paragraph-by-paragraph)
+      3. For each paragraph, ask: "Does this contain or imply a decision?"
+      4. If YES, extract it immediately into a temporary list
+
+      PHASE 2: DECISION TYPOLOGY & EXTRACTION
+      Classify EVERY decision into ONE of these types:
+
+      - **ARCH**: Architectural Decision (foundational tech/structure choices)
+      - **META**: Meta-Decision (decisions ABOUT the decision-making process itself)
+      - **PROC**: Process/Workflow Decision (how humans or agents interact)
+      - **UXD**: UX/Visual Design Decision (specific visual or interaction design)
+      - **REQ**: Requirement/Constraint (non-negotiable boundaries or goals)
+
+      PHASE 3: STRUCTURED OUTPUT
+      Generate JSON structure for each decision:
+      {
+        "decision_id": "ARCH-001",
+        "decision_type": "ARCH",
+        "domain": "System Architecture",
+        "statement": "Use Neo4j for graph database",
+        "rationale": "Provides native graph querying capabilities",
+        "evidence_quality": "STRONG",
+        "evidence_citations": ["Section 3: Database Selection"],
+        "immutability": "LOCKED_CORE",
+        "tags": ["database", "architecture", "infrastructure"]
+      }
+
+      OUTPUT FORMAT:
+      1. DECISION CATALOG: Numbered list grouped by Decision Type
+      2. META-DECISION REGISTRY: Separate prioritized list of META decisions
+      3. EVIDENCE ASSESSMENT: Table of Decision ID | Domain | Evidence Quality | Issues
+      4. RAG JSON ARRAY: Complete JSON structure ready for ingestion
+      5. CONFLICT REPORT: List of inconsistencies or validation failures
+
+      Analyze the provided documents systematically and provide all five deliverables.
+    timeout: 600
+    tags: ["decision-extraction", "documentation", "rag-analysis"]
+    description: "Extract and structure architectural decisions from documentation using systematic bottom-up analysis"
+
+# You can add more task files for different workflows:
+# - tasks/code_analysis.yaml - Focus on code analysis
+# - tasks/performance.yaml - Performance testing and benchmarking
+# - tasks/documentation.yaml - Documentation generation
+# - tasks/deployment.yaml - Deployment and system checks
