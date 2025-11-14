@@ -11,6 +11,7 @@ from .ccr_manager import CCRManager
 from .task_parser import TaskParser, TaskDefinition
 from .ssh_executor import SSHExecutor, TaskResult
 from .results_aggregator import ResultsAggregator
+from .secrets_manager import SecretsManager, get_secrets_manager
 
 __all__ = [
     "ZoWorkerSwarm",
@@ -19,5 +20,7 @@ __all__ = [
     "TaskDefinition",
     "SSHExecutor",
     "TaskResult",
-    "ResultsAggregator"
+    "ResultsAggregator",
+    "SecretsManager",
+    "get_secrets_manager"
 ]

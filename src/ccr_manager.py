@@ -11,6 +11,8 @@ import requests
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from secrets_manager import get_secrets_manager
+
 class CCRInstance:
     """Represents a single CCR instance configuration"""
     def __init__(self, name: str, config_path: str, port: int, model_name: str):
@@ -77,6 +79,12 @@ class CCRManager:
         self.instances: Dict[str, CCRInstance] = {}
         self.running_instances: Dict[str, subprocess.Popen] = {}
 
+        # Initialize secrets manager
+        self.secrets_manager = get_secrets_manager()
+
+        # Inject secrets into environment
+        self._inject_secrets()
+
         # Load instances
         self._load_instances()
 
@@ -91,6 +99,14 @@ class CCRManager:
                     port=config["port"],
                     model_name=config["model"]
                 )
+
+    def _inject_secrets(self):
+        """Inject secrets from Bitwarden Secrets Manager into environment"""
+        try:
+            self.secrets_manager.inject_secrets_into_env()
+        except Exception as e:
+            print(f"⚠️  Could not inject secrets from BWS: {e}")
+            print("   Falling back to environment variables")
 
     def start_instance(self, instance_name: str) -> bool:
         """Start a specific CCR instance

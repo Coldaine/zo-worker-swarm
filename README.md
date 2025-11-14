@@ -61,6 +61,13 @@ Windows Machine                          Zo Machine (via SSH)
 - Markdown report generation
 - Success rates, timing, and error tracking
 
+### 🔐 **Automatic Secrets Management**
+- Bitwarden Secrets Manager integration
+- Automatic API key injection from secure vault
+- No manual environment variable configuration
+- Secure token storage with keychain support
+- Team secret sharing with machine accounts
+
 ## Installation
 
 ### Prerequisites
@@ -98,13 +105,28 @@ Windows Machine                          Zo Machine (via SSH)
    pip install -r requirements.txt
    ```
 
-3. **Verify CCR configs**
-   The `configs/` directory contains 5 pre-configured CCR instances. Verify your API keys are correct:
+3. **Configure API Keys** (Choose Option A or B)
+
+   **Option A: Bitwarden Secrets Manager (Recommended)**
+
+   Automatically manage all API keys with Bitwarden:
    ```bash
-   # Edit configs if needed
-   notepad configs/ccr-general.json
-   notepad configs/ccr-fast.json
-   # etc...
+   # Set your BWS access token
+   export BWS_ACCESS_TOKEN="your-bws-token"
+
+   # Test the connection
+   python src/secrets_manager.py
+   ```
+
+   📘 **[Complete BWS Setup Guide](docs/BWS_SETUP.md)**
+
+   **Option B: Manual Environment Variables**
+
+   Set API keys manually:
+   ```bash
+   export ZAI_API_KEY="your-zai-key"
+   export XAI_API_KEY="your-xai-key"
+   export OPENROUTER_API_KEY="your-openrouter-key"
    ```
 
 ## Usage
@@ -112,10 +134,8 @@ Windows Machine                          Zo Machine (via SSH)
 ### Quick Start
 
 ```bash
-# 1. Set API keys (required)
-export ZAI_API_KEY="your-zai-key"
-export XAI_API_KEY="your-xai-key"
-export OPENROUTER_API_KEY="your-openrouter-key"
+# 1. API keys are automatically loaded from BWS (if configured)
+#    Or set manually: export ZAI_API_KEY="..." XAI_API_KEY="..." OPENROUTER_API_KEY="..."
 
 # 2. Start CCR instances
 python scripts/run.py start-ccr
@@ -129,6 +149,8 @@ python scripts/run.py execute tasks/example_zo_tasks.yaml
 # 5. Stop CCR instances (optional)
 python scripts/run.py stop-ccr
 ```
+
+> **💡 Tip**: With Bitwarden Secrets Manager configured, API keys are automatically loaded. No manual environment variables needed! See [BWS Setup Guide](docs/BWS_SETUP.md).
 
 ### Task Definition Format
 
