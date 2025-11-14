@@ -105,8 +105,8 @@ class CCRManager:
         try:
             self.secrets_manager.inject_secrets_into_env()
         except Exception as e:
-            print(f"⚠️  Could not inject secrets from BWS: {e}")
-            print("   Falling back to environment variables")
+            print(f"[!] Could not inject secrets from BWS: {e}")
+            print("    Falling back to environment variables")
 
     def start_instance(self, instance_name: str) -> bool:
         """Start a specific CCR instance
@@ -118,11 +118,11 @@ class CCRManager:
             True if started successfully, False otherwise
         """
         if instance_name not in self.instances:
-            print(f"❌ Instance '{instance_name}' not found")
+            print(f"[-] Instance '{instance_name}' not found")
             return False
 
         if instance_name in self.running_instances:
-            print(f"⚠️  Instance '{instance_name}' is already running")
+            print(f"[!] Instance '{instance_name}' is already running")
             return False
 
         instance = self.instances[instance_name]
@@ -131,7 +131,7 @@ class CCRManager:
         cmd = ["ccr", "start", "--config", instance.config_path]
 
         try:
-            print(f"🚀 Starting {instance_name} on port {instance.port} ({instance.model_name})...")
+            print(f"[*] Starting {instance_name} on port {instance.port} ({instance.model_name})...")
 
             # Start the process
             process = subprocess.Popen(
@@ -147,15 +147,15 @@ class CCRManager:
             # Check if it's running
             if self._check_instance_health(instance.port):
                 self.running_instances[instance_name] = process
-                print(f"✅ {instance_name} started successfully")
+                print(f"[+] {instance_name} started successfully")
                 return True
             else:
-                print(f"❌ {instance_name} failed to start")
+                print(f"[-] {instance_name} failed to start")
                 process.kill()
                 return False
 
         except Exception as e:
-            print(f"❌ Error starting {instance_name}: {e}")
+            print(f"[-] Error starting {instance_name}: {e}")
             return False
 
     def stop_instance(self, instance_name: str) -> bool:
@@ -168,23 +168,23 @@ class CCRManager:
             True if stopped successfully, False otherwise
         """
         if instance_name not in self.running_instances:
-            print(f"⚠️  Instance '{instance_name}' is not running")
+            print(f"[!] Instance '{instance_name}' is not running")
             return False
 
         try:
             instance = self.instances[instance_name]
-            print(f"🛑 Stopping {instance_name}...")
+            print(f"[*] Stopping {instance_name}...")
 
             # Use ccr stop command
             subprocess.run(["ccr", "stop", "--port", str(instance.port)])
 
             # Remove from running instances
             del self.running_instances[instance_name]
-            print(f"✅ {instance_name} stopped")
+            print(f"[+] {instance_name} stopped")
             return True
 
         except Exception as e:
-            print(f"❌ Error stopping {instance_name}: {e}")
+            print(f"[-] Error stopping {instance_name}: {e}")
             return False
 
     def start_all(self) -> int:
@@ -193,7 +193,7 @@ class CCRManager:
         Returns:
             Number of instances successfully started
         """
-        print("🚀 Starting all CCR instances...\n")
+        print("[*] Starting all CCR instances...\n")
         success_count = 0
 
         for instance_name in self.instances.keys():
@@ -201,7 +201,7 @@ class CCRManager:
                 success_count += 1
             print()  # Blank line between instances
 
-        print(f"✅ Started {success_count}/{len(self.instances)} instances")
+        print(f"[+] Started {success_count}/{len(self.instances)} instances")
         return success_count
 
     def stop_all(self) -> int:
@@ -210,7 +210,7 @@ class CCRManager:
         Returns:
             Number of instances successfully stopped
         """
-        print("🛑 Stopping all CCR instances...\n")
+        print("[*] Stopping all CCR instances...\n")
         success_count = 0
 
         # Copy keys to avoid dict size change during iteration
@@ -219,7 +219,7 @@ class CCRManager:
                 success_count += 1
             print()
 
-        print(f"✅ Stopped {success_count} instances")
+        print(f"[+] Stopped {success_count} instances")
         return success_count
 
     def status(self) -> Dict[str, Dict]:
@@ -251,7 +251,7 @@ class CCRManager:
         print("="*80 + "\n")
 
         for name, info in status.items():
-            status_icon = "🟢" if info["running"] else "🔴"
+            status_icon = "[+]" if info["running"] else "[-]"
             status_text = "RUNNING" if info["running"] else "STOPPED"
 
             print(f"{status_icon} {name.upper():<15} [{status_text}]")

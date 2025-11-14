@@ -95,9 +95,9 @@ class ResultsAggregator:
         # Create summary panel
         summary_text = f"""
 [bold]Total Tasks:[/bold] {stats['total_tasks']}
-[green]✅ Successful:[/green] {stats['successful']}
-[red]❌ Failed:[/red] {stats['failed']}
-[yellow]⏱️  Timeout:[/yellow] {stats['timeout']}
+[green][+] Successful:[/green] {stats['successful']}
+[red][-] Failed:[/red] {stats['failed']}
+[yellow][!] Timeout:[/yellow] {stats['timeout']}
 [bold]Success Rate:[/bold] {stats['success_rate']:.1f}%
 
 [bold]Duration:[/bold]
@@ -107,13 +107,13 @@ class ResultsAggregator:
 
         self.console.print(Panel(
             summary_text.strip(),
-            title="📊 Execution Summary",
+            title="[*] Execution Summary",
             border_style="blue"
         ))
 
         # Instance breakdown table
         if stats['by_instance']:
-            table = Table(title="\\n📦 Results by Instance")
+            table = Table(title="\\n[*] Results by Instance")
             table.add_column("Instance", style="cyan")
             table.add_column("Tasks", justify="right")
             table.add_column("Success", justify="right")
@@ -146,11 +146,11 @@ class ResultsAggregator:
         for i, result in enumerate(self.results, 1):
             # Status icon and color
             if result.status == "success":
-                status_text = "[green]✅ SUCCESS[/green]"
+                status_text = "[green][+] SUCCESS[/green]"
             elif result.status == "failed":
-                status_text = "[red]❌ FAILED[/red]"
+                status_text = "[red][-] FAILED[/red]"
             else:
-                status_text = "[yellow]⏱️  TIMEOUT[/yellow]"
+                status_text = "[yellow][!] TIMEOUT[/yellow]"
 
             self.console.print(f"[bold]{i}. {result.task_name}[/bold] - {status_text}")
             self.console.print(f"   Instance: {result.ccr_instance} (port {result.ccr_port})")
@@ -209,7 +209,7 @@ class ResultsAggregator:
         with open(output_path, 'w') as f:
             json.dump(results_data, f, indent=2)
 
-        self.console.print(f"\\n💾 Results saved to: [cyan]{output_path}[/cyan]")
+        self.console.print(f"\\n[*] Results saved to: [cyan]{output_path}[/cyan]")
 
         return output_path
 
@@ -236,9 +236,9 @@ class ResultsAggregator:
             f"\\nGenerated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\\n",
             "## Summary",
             f"- **Total Tasks**: {stats['total_tasks']}",
-            f"- **Successful**: {stats['successful']} ✅",
-            f"- **Failed**: {stats['failed']} ❌",
-            f"- **Timeout**: {stats['timeout']} ⏱️",
+            f"- **Successful**: {stats['successful']}",
+            f"- **Failed**: {stats['failed']}",
+            f"- **Timeout**: {stats['timeout']}",
             f"- **Success Rate**: {stats['success_rate']:.1f}%",
             f"- **Total Duration**: {stats['total_duration']:.1f}s",
             f"- **Average Duration**: {stats['average_duration']:.1f}s per task",
@@ -263,7 +263,7 @@ class ResultsAggregator:
         md_lines.append("\\n## Detailed Task Results\\n")
 
         for i, result in enumerate(self.results, 1):
-            status_emoji = {"success": "✅", "failed": "❌", "timeout": "⏱️"}.get(result.status, "❓")
+            status_emoji = {"success": "[+]", "failed": "[-]", "timeout": "[!]"}.get(result.status, "[?]")
 
             md_lines.extend([
                 f"### {i}. {result.task_name} {status_emoji}",
@@ -291,7 +291,7 @@ class ResultsAggregator:
         with open(output_path, 'w') as f:
             f.write('\\n'.join(md_lines))
 
-        self.console.print(f"📄 Markdown report saved to: [cyan]{output_path}[/cyan]")
+        self.console.print(f"[*] Markdown report saved to: [cyan]{output_path}[/cyan]")
 
         return output_path
 

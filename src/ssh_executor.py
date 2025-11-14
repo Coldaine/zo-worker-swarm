@@ -28,7 +28,7 @@ class TaskResult:
     ccr_port: int
 
     def __repr__(self):
-        status_icon = "✅" if self.status == "success" else "❌"
+        status_icon = "[+]" if self.status == "success" else "[-]"
         return f"{status_icon} {self.task_name} ({self.duration_seconds:.1f}s) - {self.status}"
 
 
@@ -64,9 +64,9 @@ class SSHExecutor:
         start_time = datetime.now()
 
         if verbose:
-            print(f"\n🚀 Executing: {task.name}")
-            print(f"   Instance: {task.ccr_instance} (port {ccr_port})")
-            print(f"   Timeout: {task.timeout}s")
+            print(f"\n[*] Executing: {task.name}")
+            print(f"    Instance: {task.ccr_instance} (port {ccr_port})")
+            print(f"    Timeout: {task.timeout}s")
 
         # Build the SSH command that will execute on Zo
         ssh_cmd = self._build_ssh_command(task, ccr_port)
@@ -176,14 +176,14 @@ class SSHExecutor:
             List of TaskResult objects
         """
         if verbose:
-            print(f"\n📦 Executing batch of {len(tasks)} tasks in parallel...")
+            print(f"\n[*] Executing batch of {len(tasks)} tasks in parallel...")
 
         # Create tasks with their corresponding CCR ports
         async_tasks = []
         for task in tasks:
             ccr_port = ccr_ports.get(task.ccr_instance)
             if ccr_port is None:
-                print(f"❌ Error: No CCR port found for instance '{task.ccr_instance}'")
+                print(f"[-] Error: No CCR port found for instance '{task.ccr_instance}'")
                 continue
 
             async_tasks.append(self.execute_task(task, ccr_port, verbose))
@@ -223,8 +223,8 @@ class SSHExecutor:
             # Check if all tasks in batch succeeded
             failed_tasks = [r for r in batch_results if r.status != "success"]
             if failed_tasks and i < len(batches):
-                print(f"\n⚠️  Warning: {len(failed_tasks)} task(s) failed in batch {i}")
-                print("   Continuing to next batch...")
+                print(f"\n[!] Warning: {len(failed_tasks)} task(s) failed in batch {i}")
+                print("    Continuing to next batch...")
 
         return all_results
 
@@ -235,11 +235,11 @@ class SSHExecutor:
             result: TaskResult object
         """
         status_icons = {
-            "success": "✅",
-            "failed": "❌",
-            "timeout": "⏱️"
+            "success": "[+]",
+            "failed": "[-]",
+            "timeout": "[!]"
         }
-        icon = status_icons.get(result.status, "❓")
+        icon = status_icons.get(result.status, "[?]")
 
         print(f"\n{icon} {result.task_name} - {result.status.upper()}")
         print(f"   Duration: {result.duration_seconds:.1f}s")

@@ -11,7 +11,7 @@ try:
     from bitwarden_sdk import BitwardenClient, DeviceType, client_settings_from_dict
 except ImportError:
     BitwardenClient = None
-    print("⚠️  Warning: bitwarden-sdk not installed. Run: pip install bitwarden-sdk")
+    print("[!] Warning: bitwarden-sdk not installed. Run: pip install bitwarden-sdk")
 
 
 class SecretsManager:
@@ -41,12 +41,12 @@ class SecretsManager:
         self._secrets_cache: Dict[str, str] = {}
 
         if not self.access_token:
-            print("⚠️  BWS_ACCESS_TOKEN not set. Secrets Manager features disabled.")
-            print("   Set via: export BWS_ACCESS_TOKEN='your-token-here'")
+            print("[!] BWS_ACCESS_TOKEN not set. Secrets Manager features disabled.")
+            print("    Set via: export BWS_ACCESS_TOKEN='your-token-here'")
             return
 
         if BitwardenClient is None:
-            print("⚠️  Bitwarden SDK not installed. Cannot fetch secrets from BWS.")
+            print("[!] Bitwarden SDK not installed. Cannot fetch secrets from BWS.")
             return
 
         self._initialize_client()
@@ -67,10 +67,10 @@ class SecretsManager:
             # Authenticate
             self.client.access_token_login(self.access_token)
 
-            print("✅ Connected to Bitwarden Secrets Manager")
+            print("[+] Connected to Bitwarden Secrets Manager")
 
         except Exception as e:
-            print(f"❌ Failed to initialize Bitwarden SDK: {e}")
+            print(f"[-] Failed to initialize Bitwarden SDK: {e}")
             self.client = None
 
     def get_secret(self, secret_name: str) -> Optional[str]:
@@ -105,11 +105,11 @@ class SecretsManager:
                     self._secrets_cache[secret_name] = value
                     return value
 
-            print(f"⚠️  Secret '{secret_name}' not found in BWS. Checking environment...")
+            print(f"[!] Secret '{secret_name}' not found in BWS. Checking environment...")
             return os.getenv(secret_name)
 
         except Exception as e:
-            print(f"❌ Error fetching secret '{secret_name}': {e}")
+            print(f"[-] Error fetching secret '{secret_name}': {e}")
             return os.getenv(secret_name)
 
     def get_all_secrets(self) -> Dict[str, str]:
@@ -137,7 +137,7 @@ class SecretsManager:
         for key, value in secrets.items():
             os.environ[key] = value
 
-        print(f"✅ Injected {len(secrets)} secrets into environment")
+        print(f"[+] Injected {len(secrets)} secrets into environment")
 
     def substitute_secrets_in_config(self, config_dict: dict) -> dict:
         """Replace secret placeholders in config with actual values
@@ -165,7 +165,7 @@ class SecretsManager:
             if value:
                 return value
             else:
-                print(f"⚠️  Secret '{var_name}' not found, leaving placeholder")
+                print(f"[!] Secret '{var_name}' not found, leaving placeholder")
                 return match.group(0)
 
         # Replace all patterns
@@ -177,14 +177,14 @@ class SecretsManager:
     def list_available_secrets(self):
         """List all secrets available in BWS (for debugging)"""
         if not self.client:
-            print("❌ BWS client not initialized")
+            print("[-] BWS client not initialized")
             return
 
         try:
             secrets_response = self.client.secrets().list(self.project_id)
 
-            print(f"\n📦 Available secrets in BWS:")
-            print("─" * 60)
+            print(f"\n[*] Available secrets in BWS:")
+            print("-" * 60)
 
             for secret in secrets_response.data:
                 project_info = f"(Project: {secret.project_id})" if secret.project_id else ""
@@ -194,7 +194,7 @@ class SecretsManager:
             print()
 
         except Exception as e:
-            print(f"❌ Error listing secrets: {e}")
+            print(f"[-] Error listing secrets: {e}")
 
 
 # Singleton instance for easy access
@@ -226,11 +226,11 @@ if __name__ == "__main__":
     # Get specific secret
     zai_key = sm.get_secret("ZAI_API_KEY")
     if zai_key:
-        print(f"✅ ZAI_API_KEY: {zai_key[:10]}...")
+        print(f"[+] ZAI_API_KEY: {zai_key[:10]}...")
 
     # Get all secrets
     all_secrets = sm.get_all_secrets()
-    print(f"\n✅ Retrieved {len(all_secrets)} secrets")
+    print(f"\n[+] Retrieved {len(all_secrets)} secrets")
 
     # Inject into environment
     sm.inject_secrets_into_env()

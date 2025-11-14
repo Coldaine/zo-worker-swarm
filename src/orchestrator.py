@@ -70,7 +70,7 @@ class ZoWorkerSwarm:
             # Step 2: Load and parse tasks
             self.console.print("[bold blue]STEP 2: Loading Tasks[/bold blue]")
             tasks = TaskParser.load_from_file(task_file)
-            self.console.print(f"✅ Loaded {len(tasks)} tasks from {task_file}\\n")
+            self.console.print(f"[+] Loaded {len(tasks)} tasks from {task_file}\\n")
 
             # Step 3: Determine execution order
             self.console.print("[bold blue]STEP 3: Planning Execution[/bold blue]")

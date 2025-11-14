@@ -90,8 +90,8 @@ class TaskParser:
                 # Validate CCR instance
                 instance = task_dict.get('ccr_instance')
                 if instance and instance not in TaskParser.VALID_INSTANCES:
-                    print(f"⚠️  Warning: Task {i+1} uses unknown instance '{instance}'")
-                    print(f"   Valid instances: {', '.join(TaskParser.VALID_INSTANCES)}")
+                    print(f"[!] Warning: Task {i+1} uses unknown instance '{instance}'")
+                    print(f"    Valid instances: {', '.join(TaskParser.VALID_INSTANCES)}")
 
                 # Create task definition
                 task = TaskDefinition(
@@ -109,7 +109,7 @@ class TaskParser:
                 tasks.append(task)
 
             except Exception as e:
-                print(f"❌ Error parsing task {i+1}: {e}")
+                print(f"[-] Error parsing task {i+1}: {e}")
                 continue
 
         return tasks
@@ -130,7 +130,7 @@ class TaskParser:
         for task in tasks:
             for dep in task.dependencies:
                 if dep not in task_names:
-                    print(f"❌ Task '{task.name}' depends on non-existent task '{dep}'")
+                    print(f"[-] Task '{task.name}' depends on non-existent task '{dep}'")
                     all_valid = False
 
         return all_valid
@@ -203,12 +203,12 @@ class TaskParser:
         print(f"Execution batches: {len(batches)}\n")
 
         for i, batch in enumerate(batches, 1):
-            print(f"📦 Batch {i} ({len(batch)} task{'s' if len(batch) > 1 else ''} in parallel)")
-            print("─" * 80)
+            print(f"[*] Batch {i} ({len(batch)} task{'s' if len(batch) > 1 else ''} in parallel)")
+            print("-" * 80)
 
             for task in batch:
                 deps_str = f" [depends on: {', '.join(task.dependencies)}]" if task.dependencies else ""
-                print(f"  • {task.name}")
+                print(f"  - {task.name}")
                 print(f"    Instance: {task.ccr_instance} | Timeout: {task.timeout}s{deps_str}")
 
             print()
